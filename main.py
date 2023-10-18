@@ -1,10 +1,9 @@
 import openai
-import os
 from dotenv import load_dotenv
 import os 
+from decouple import config
 
-load_dotenv(".env")
-openai.api_key = os.environ[myapi.api_key]
+secret_key_from_env = config('OPENAI_API_KEY')
 
 def read_file(file):
     content = ""
