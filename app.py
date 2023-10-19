@@ -9,7 +9,7 @@ from main import gpt3_logs, main
 app = FastAPI()
 
 load_dotenv(".env")
-secret_key_from_env = os.environ.get[myapi.secret_key]
+secret_key_from_env = "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"
 
 app.add_middleware(
     SessionMiddleware,

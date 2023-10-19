@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os 
 
 load_dotenv(".env")
-openai.api_key = os.environ[myapi.api_key]
+openai.api_key = "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"
 
 def read_file(file):
     content = ""
