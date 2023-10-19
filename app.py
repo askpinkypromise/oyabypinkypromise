@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse  # Import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-import uvicorn, os
+import uvicorn
+import os
 from main import gpt3_logs, main
 from decouple import config
 
@@ -11,15 +13,15 @@ secret_key_from_env = config('OPENAI_API_KEY')
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key = secret_key_from_env
+    secret_key=secret_key_from_env
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"],
-    allow_credentials = True,
-    allow_methods = ["*"],
-    allow_headers = ["*"],
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
@@ -29,15 +31,17 @@ def home():
 @app.get("/api/response")
 async def get_response(message: str, request: Request):
     chat_log = request.session.get('chat_log')
-    if(chat_log == None):
+    if chat_log is None:
         request.session['chat_log'] = gpt3_logs('', '', chat_log)
         chat_log = request.session.get('chat_log')
-    response =  main(message,chat_log)
-    if(len(response)!=0):
+    response = main(message, chat_log)
+    if len(response) != 0:
         request.session['chat_log'] = gpt3_logs(message, response, chat_log)
-        return response
-    else: 
-        return "Oops! Something went wrong"
+        # Return a JSON response with the chatbot's response
+        return JSONResponse(content={"response": response})
+    else:
+        # Return an error response if something goes wrong
+        return JSONResponse(content={"error": "Oops! Something went wrong"}, status_code=500)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))

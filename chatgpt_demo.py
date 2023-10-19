@@ -1,5 +1,8 @@
 import openai
-openai.api_key = "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" # your token goes here
+from decouple import config
+
+openai.api_key = config('OPENAI_API_KEY') # your token goes here
+
 
 def get_model_reply(query, context=[]):
     # combines the new question with a previous context

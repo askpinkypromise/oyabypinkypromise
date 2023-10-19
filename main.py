@@ -3,7 +3,9 @@ from dotenv import load_dotenv
 import os 
 from decouple import config
 
-secret_key_from_env = config('OPENAI_API_KEY')
+secret_key_from_env = "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"
+openai.api_key = "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" # your token goes here
+
 
 def read_file(file):
     content = ""
