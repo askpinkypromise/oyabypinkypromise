@@ -9,8 +9,6 @@ app = FastAPI()
 
 secret_key_from_env = config('OPENAI_API_KEY')
 
-port = int(os.environ.get("PORT", 5000))
-
 app.add_middleware(
     SessionMiddleware,
     secret_key = secret_key_from_env
@@ -42,4 +40,5 @@ async def get_response(message: str, request: Request):
         return "Oops! Something went wrong"
 
 if __name__ == "__main__":
-    uvicorn.run("app:app",port = 8000,reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
