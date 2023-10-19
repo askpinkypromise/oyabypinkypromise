@@ -1,13 +1,15 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-import uvicorn
+import uvicorn, os
 from main import gpt3_logs, main
 from decouple import config
 
 app = FastAPI()
 
 secret_key_from_env = config('OPENAI_API_KEY')
+
+port = int(os.environ.get("PORT", 5000))
 
 app.add_middleware(
     SessionMiddleware,
