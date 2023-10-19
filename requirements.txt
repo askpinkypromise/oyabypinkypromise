@@ -5,4 +5,3 @@ openai==0.27.0
 starlette==0.16.0
 python-decouple==3.8
 itsdangerous==2.1.2
-json
