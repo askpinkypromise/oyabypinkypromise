@@ -3,9 +3,8 @@ from dotenv import load_dotenv
 import os 
 from decouple import config
 
-secret_key_from_env = "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"
-openai.api_key = "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" # your token goes here
-
+secret_key_from_env = config('OPENAI_API_KEY')
+openai.api_key = config('OPENAI_API_KEY')
 
 def read_file(file):
     content = ""
@@ -25,7 +24,7 @@ def answer(ques, chat_log = None):
     while True:
         try:
             prompt_text = f'{chat_log}{restart_sequence} {ques}{start_sequence}'
-            print(prompt_text)
+            print("PROMT TEXT", ques)
             response = openai.Completion.create(
                 model = "text-davinci-002",
                 prompt = prompt_text,
@@ -36,14 +35,20 @@ def answer(ques, chat_log = None):
                 presence_penalty = 0.6,
                 stop = ["User:", "VBot:"]
             ) 
-            print(response)
+            print("RESPONSE", response)
             ans = response['choices'][0]['text']
             return str(ans)
-        except:
+        except Exception as e:
             try_count = try_count + 1
-            if(try_count >= max_try): 
+            if try_count >= max_try:
                 return 'GTP3 error'
-            print('Error')
+            
+            # Print the error message and stack trace for debugging
+            print('Error:', str(e))
+            
+            # Handle the error or return an appropriate response
+            # For debugging purposes, you can return the error message
+            return 'An error occurred: ' + str(e)
 
 def checkViolation(ans):
     response = openai.Moderation.create(input=ans)
