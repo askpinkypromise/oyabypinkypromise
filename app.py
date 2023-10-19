@@ -13,6 +13,15 @@ app = FastAPI()
 
 secret_key_from_env = config('OPENAI_API_KEY')
 
+# Configure CORS settings to allow access from any origin
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow access from any origin
+    allow_credentials=True,
+    allow_methods=["*"],  # You can restrict HTTP methods if needed
+    allow_headers=["*"],  # You can restrict headers if needed
+)
+
 @app.get("/")
 def home():
     return "Hit from VBot"
