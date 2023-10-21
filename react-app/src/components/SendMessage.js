@@ -36,8 +36,7 @@ const SendMessage = ({ scroll }) => {
     const fetchData = async () => {
       try {
         console.log("fetching data");
-        const apiUrl =
-          "https://oya-chat-copilot-ca265bb90486.herokuapp.com/api/response?message=when will my breasts&chat_log=Initial+chatlog+content";
+        const apiUrl = `https://oya-chat-copilot-ca265bb90486.herokuapp.com/api/response?message=${message}`;
         const response = await fetch(apiUrl);
 
         if (response.ok) {
@@ -91,7 +90,7 @@ const SendMessage = ({ scroll }) => {
     const { uid, displayName, photoURL } = auth.currentUser;
     console.log("user", uid, displayName, photoURL);
     try {
-      await addMessage(message, "Akanksha", "", auth.currentUser?.uid);
+      await addMessage(message, displayName, "", auth.currentUser?.uid);
       console.log("Message added successfully");
     } catch (error) {
       console.error("Error adding message:", error);

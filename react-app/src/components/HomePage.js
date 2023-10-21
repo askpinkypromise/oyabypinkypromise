@@ -27,7 +27,7 @@ const HomePage = () => {
     <div className="home-page">
       {<NavBar />}
       <div className="heading-home-page">
-        <p>Hi Akanksha,</p>
+        <p>Hi, {user ? user.displayName : "Guest"}!</p>
         <p> Welcome to Oya!</p>
         <div className="image-home-page">
           <img

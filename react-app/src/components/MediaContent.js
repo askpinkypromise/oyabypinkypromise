@@ -21,6 +21,8 @@ const FirestoreData = () => {
       }
     };
 
+    const videoIds = data.map((item) => item.videoId);
+
     // Call the fetchData function when the component mounts
     fetchData();
   }, []); // Empty dependency array ensures this effect runs once on mount
