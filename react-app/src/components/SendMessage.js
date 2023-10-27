@@ -8,6 +8,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
+import { join } from "path";
 
 async function addMessage(text, name, avatar, uid) {
   const messagesCollection = collection(db, "messages");
@@ -79,6 +80,7 @@ const SendMessage = ({ scroll }) => {
 
   const sendMessage = async (event) => {
     console.log("IN SEND MESSAGE FUNCTION");
+
     const user = auth.currentUser;
     console.log("User:", user);
 
