@@ -8,20 +8,22 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
-import { join } from "path";
+// import { join } from "path";
 
 async function addMessage(text, name, avatar, uid) {
   const messagesCollection = collection(db, "messages");
-
   try {
+    if(uid !== "kRwZoX1MdORDYjjj1Yxid5ZHBMX2") {
+      var to = "doctor"
+    }
     await addDoc(messagesCollection, {
       text: text,
       name: name,
       avatar: avatar,
       createdAt: serverTimestamp(),
       uid: uid,
+      to: to,
     });
-    console.log("Message added successfully");
   } catch (error) {
     console.error("Error adding message:", error);
     // Handle the error as needed
@@ -36,13 +38,11 @@ const SendMessage = ({ scroll }) => {
     // Make the API call
     const fetchData = async () => {
       try {
-        console.log("fetching data");
         const apiUrl = `https://oya-chat-copilot-ca265bb90486.herokuapp.com/api/response?message=${message}`;
         const response = await fetch(apiUrl);
 
         if (response.ok) {
           const data = await response.json();
-          console.log("API Response:", data["response"]);
           setMessage(data["response"]); // Set the message from the API response
           scroll.current.scrollIntoView({ behavior: "smooth" });
         } else {
@@ -56,8 +56,7 @@ const SendMessage = ({ scroll }) => {
     };
 
     // Set up a listener for the "messages" collection
-    console.log("fetch");
-    fetchData();
+   // fetchData();
 
     const messagesCollectionRef = collection(db, "messages");
     const unsubscribe = onSnapshot(messagesCollectionRef, (querySnapshot) => {
@@ -65,7 +64,7 @@ const SendMessage = ({ scroll }) => {
       querySnapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
           // A new message was added
-          fetchData(); // Call the fetch data function when a new message is added
+          // fetchData(); // Call the fetch data function when a new message is added
         }
         // You can also handle "modified" and "removed" changes if needed
       });
@@ -79,21 +78,15 @@ const SendMessage = ({ scroll }) => {
   }, []); // Empty dependency array, runs once on component mount
 
   const sendMessage = async (event) => {
-    console.log("IN SEND MESSAGE FUNCTION");
-
     const user = auth.currentUser;
-    console.log("User:", user);
-
     event.preventDefault();
     if (message.trim() === "") {
       alert("Enter valid message");
       return;
     }
     const { uid, displayName, photoURL } = auth.currentUser;
-    console.log("user", uid, displayName, photoURL);
     try {
       await addMessage(message, displayName, "", auth.currentUser?.uid);
-      console.log("Message added successfully");
     } catch (error) {
       console.error("Error adding message:", error);
       // Handle the error here, such as displaying an error message to the user or taking appropriate action.
@@ -104,13 +97,15 @@ const SendMessage = ({ scroll }) => {
       <label htmlFor="messageInput" hidden>
         Enter Message
       </label>
-      <input
+      <textarea
         id="messageInput"
         name="messageInput"
         type="text"
         className="form-input__input"
         placeholder="type message..."
         value={message}
+        rows={10}
+        cols={50}
         onChange={(e) => setMessage(e.target.value)}
       />
       <button type="submit">Send</button>

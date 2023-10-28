@@ -5,26 +5,45 @@ import NavBar from "./NavBar";
 
 const FirestoreData = () => {
   const [data, setData] = useState([]);
+  const [videoIds, setVideoIds] = useState([]);
+  const [category, setCategory] = useState("");
+
+  const browseCategory = (e, category) => {
+    e.preventDefault();
+    setCategory(category)
+    fetchData(category);
+  }
+
+  const fetchData = async (topic) => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "content")); // Replace with your Firestore collection name
+      const documents = [];
+      querySnapshot.forEach((doc) => {
+        documents.push({ id: doc.id, ...doc.data() });
+      });
+      setData(documents);
+      if(topic === "any") {
+        const links = documents.map((item) => item.link.slice(32));
+        setVideoIds(links);
+      }
+      else {
+        const links = [];
+        documents.map((item) => {
+          if(item.topic === topic) {
+            links.push(item.link.slice(32));
+          }
+        });
+        setVideoIds(links);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
     // Function to fetch data from Firestore
-    const fetchData = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "content")); // Replace with your Firestore collection name
-        const documents = [];
-        querySnapshot.forEach((doc) => {
-          documents.push({ id: doc.id, ...doc.data() });
-        });
-        setData(documents);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    const videoIds = data.map((item) => item.videoId);
-
     // Call the fetchData function when the component mounts
-    fetchData();
+    fetchData("any");
   }, []); // Empty dependency array ensures this effect runs once on mount
 
   return (
@@ -34,6 +53,7 @@ const FirestoreData = () => {
         minHeight: "100vh",
         padding: "20px",
       }}
+      className="content"
     >
       {<NavBar />}
 
@@ -50,6 +70,7 @@ const FirestoreData = () => {
         />
       </div>
       <h2 style={{ marginTop: "30px", fontSize: "24px" }}>Curated for you</h2>
+      {category ? <h4 style={{ marginTop: "30px", fontSize: "20px" }}>Topic : {category} </h4> : <h4></h4>}
       <div
         style={{
           display: "flex",
@@ -96,16 +117,7 @@ const FirestoreData = () => {
             borderRadius: "8px",
             border: "none",
           }}
-        >
-          Puberty
-        </button>
-        <button
-          style={{
-            padding: "15px",
-            backgroundColor: "#FFB3B3",
-            borderRadius: "8px",
-            border: "none",
-          }}
+          onClick={(e) => browseCategory(e, "Periods")}
         >
           Periods
         </button>
@@ -116,8 +128,9 @@ const FirestoreData = () => {
             borderRadius: "8px",
             border: "none",
           }}
+          onClick={(e) => browseCategory(e, "Body Dysmorphism")}
         >
-          Acne
+          Body Dysmorphism
         </button>
         <button
           style={{
@@ -126,8 +139,31 @@ const FirestoreData = () => {
             borderRadius: "8px",
             border: "none",
           }}
+          onClick={(e) => browseCategory(e, "Anatomy & Physiology")}
         >
-          Periods
+          Anatomy & Physiology
+        </button>
+        <button
+          style={{
+            padding: "15px",
+            backgroundColor: "#FFB3B3",
+            borderRadius: "8px",
+            border: "none",
+          }}
+          onClick={(e) => browseCategory(e, "Sex education")}
+        >
+          Sex education
+        </button>
+        <button
+          style={{
+            padding: "15px",
+            backgroundColor: "#FFB3B3",
+            borderRadius: "8px",
+            border: "none",
+          }}
+          onClick={(e) => browseCategory(e, "PCOD")}
+        >
+          PCOD
         </button>
       </div>
       <footer

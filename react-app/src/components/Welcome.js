@@ -17,7 +17,12 @@ const Welcome = () => {
       .then((userCredential) => {
         // Successful sign-in
         const user = userCredential.user;
-        navigate("/home");
+        if(user.uid === "hSJJ5oSAKNOYPSDeITLZT1rddVA2") {
+          navigate("/doctorAdmin");
+        }
+        else {
+          navigate("/home");
+        }
       })
       .catch((error) => {
         // Handle sign-in errors
@@ -26,8 +31,6 @@ const Welcome = () => {
         console.error(`Sign-in failed: ${errorCode} - ${errorMessage}`);
         // You can display an error message to the user or perform other error handling here.
       });
-
-    navigate("/home");
   };
 
   const handleSubmit = (event) => {
@@ -35,6 +38,8 @@ const Welcome = () => {
     const email = username; // Get the email from the username input
     const pass = password; // Get the password from the password input
 
+    console.log(email);
+    console.log(pass);
     // Call the emailSignIn function with the captured email and password
     googleSignIn(email, pass);
   };

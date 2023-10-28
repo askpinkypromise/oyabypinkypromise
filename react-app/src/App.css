@@ -96,7 +96,16 @@ input {
 .messages-wrapper {
   padding: 30px;
   margin-bottom: 60px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 700px;
 }
+
+.content {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .chat-bubble {
   border-radius: 20px 20px 20px 0;
   padding: 15px;
@@ -153,6 +162,7 @@ input {
   background-color: white;
   color: #1c2c4c;
   font-size: 1rem;
+  width: 100%;
 }
 .send-message > input:placeholder {
   color: #ddd;
@@ -263,4 +273,26 @@ input {
 
 .ques-card {
   display: flex;
+}
+
+.chats {
+  margin-top: 60px;
+}
+
+.chatHome {
+  padding: 20px;
+  border: 1px solid pink;
+}
+
+.chatName {
+  color: #FF424C;
+  font-family: Kurale;
+  font-size: 20px;
+}
+
+.chatText {
+  color: black;
+  font-family: Kurale;
+  font-size: 15px;
+  margin-top: 5px;
 }

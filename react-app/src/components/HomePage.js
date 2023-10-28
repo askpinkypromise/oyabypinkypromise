@@ -11,8 +11,6 @@ import backgroundImage from "./onboarding.png";
 
 const HomePage = () => {
   const user = useAuth();
-
-  console.log("user", user);
   const navigate = useNavigate();
 
   const handleClickChat = () => {
