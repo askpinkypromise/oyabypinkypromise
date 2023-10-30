@@ -50,7 +50,7 @@ const Welcome = () => {
       <img src={backgroundImage} alt="" width={200} height={300} />
       <div className="getstarted">
         <h2 className="started">Get Started</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="formUserName">
           <div className="form-group">
             <label>Username</label>
             <input

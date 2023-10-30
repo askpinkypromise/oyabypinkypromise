@@ -18,46 +18,44 @@ import { db } from "../firebase";
 const DoctorHome = () => {
 
     const [chats, setChats] = useState([]);
-
-    useEffect(() => { 
-        buildChats();
-    }, []);
-
-    const buildChats = () => {
-        const q = query(
-            collection(db, "messages"),
-            orderBy("createdAt", "desc"),
-            limit(50)
-        );
-      
-        onSnapshot(q, (QuerySnapshot) => {
-            const fetchedMessages = [];
-            QuerySnapshot.forEach((doc) => {
-                fetchedMessages.push({ ...doc.data(), id: doc.id });
-            });
-            const sortedMessages = fetchedMessages.sort(
-              (a, b) => a.createdAt - b.createdAt
+    
+    useEffect(() => {
+            const q = query(
+                collection(db, "messages"),
+                orderBy("createdAt", "desc"),
+                limit(50)
             );
 
-            const allUids = [];
-            const allChats = [];
-
-            sortedMessages.forEach(async (message) => { 
-                if(!allUids.includes(message.uid)) {
-                    allUids.push(message.uid);
-                    const docRef = await getDoc(doc(db, "users", message.uid));
-                    var chat = {
-                        "uid": message.uid,
-                        "name": docRef.data().displayName,
-                        "text": message.text
+            const unsub = onSnapshot(q, (QuerySnapshot) => {
+                const fetchedMessages = [];
+                QuerySnapshot.forEach((doc) => {
+                    fetchedMessages.push({ ...doc.data(), id: doc.id });
+                });
+                const sortedMessages = fetchedMessages.sort(
+                  (a, b) => a.createdAt - b.createdAt
+                );
+    
+                const allUids = [];
+                const allChats = [];
+    
+                sortedMessages.forEach(async (message) => { 
+                    if(!allUids.includes(message.uid)) {
+                        allUids.push(message.uid);
+                        const docRef = await getDoc(doc(db, "users", message.uid));
+                        var chat = {
+                            "uid": message.uid,
+                            "name": docRef.data().displayName,
+                            "text": message.text
+                        }
+                        allChats.push(chat);
                     }
-                    allChats.push(chat);
-                }
+                });
 
-                setChats(allChats);
-            });
-        });   
-    }
+                const someChats = [...chats];
+                someChats.push(...allChats);
+                setChats(someChats);
+            });  
+      }, [chats]);    
 
     return (
         <div>
