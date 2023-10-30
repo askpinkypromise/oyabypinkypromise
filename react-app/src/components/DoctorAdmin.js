@@ -47,9 +47,14 @@ const DoctorAdmin = () => {
         var allChats = [];
         var allUids = [];
 
+        console.log("ALL UIDS BEFORE");
         console.log(allUids);
 
-        allUids.forEach(() => allUids.pop());
+        allUids.splice(0,allUids.length);
+
+        console.log(allUids);
+        console.log("ALL UIDS AFTER");
+
 
         sortedMessages.forEach(async (message) => { 
             if(!allUids.includes(message.uid)) {

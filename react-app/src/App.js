@@ -6,6 +6,7 @@ import ChatBox from "./components/ChatBox";
 import HomePage from "./components/HomePage";
 import Welcome from "./components/Welcome";
 import MediaContent from "./components/MediaContent";
+import DoctorHome from "./components/DoctorHome";
 
 import {
   BrowserRouter as Router,
@@ -36,7 +37,7 @@ function App() {
           <Route exact path="/home" element={<HomePage />}></Route>
           <Route exact path="/chat" element={<ChatBox />}></Route>
           <Route exact path="/mediacontent" element={<MediaContent />}></Route>
-          <Route exact path="/doctorAdmin" element={<DoctorAdmin />}></Route>
+          <Route exact path="/doctorAdmin" element={<DoctorHome />}></Route>
         </Routes>
       </Router>
     </div>
