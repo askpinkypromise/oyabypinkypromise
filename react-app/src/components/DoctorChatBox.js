@@ -35,7 +35,6 @@ const DoctorChatBox = () => {
         const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
             const fetchedMessages = [];
             QuerySnapshot.forEach((doc) => {
-              console.log(doc.data());
               if(doc.data().uid === location.state.uid || (doc.data().uid === "hSJJ5oSAKNOYPSDeITLZT1rddVA2" && doc.data().to === location.state.uid)) {
                 fetchedMessages.push({ ...doc.data(), id: doc.id });
               }
@@ -44,7 +43,7 @@ const DoctorChatBox = () => {
               (a, b) => a.createdAt - b.createdAt
             );
             setMessages(sortedMessages);
-          });
+          })
         return () => unsubscribe;
     }, []); 
 
@@ -60,7 +59,7 @@ const DoctorChatBox = () => {
         
         <div>
             <span ref={scroll}></span>
-        <SendMessage scroll={scroll} userId={user.uid}/>
+        <SendMessage scroll={scroll} userId={location.state.uid} lastMessage={messages[0]}/>
         </div>
         </main>
     );

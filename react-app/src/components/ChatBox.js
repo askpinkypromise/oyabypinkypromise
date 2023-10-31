@@ -17,7 +17,6 @@ const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
   const user = useAuth();
-  console.log("user uid", user.uid);
 
   useEffect(() => {
     const q = query(

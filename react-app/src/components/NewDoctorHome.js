@@ -28,12 +28,9 @@ class NewDoctorHome extends React.Component {
     }   
 
     async hello (sortedMessages) {
-        console.log("SORTED MESSAGES");
-        console.log(sortedMessages);
         var allChats = [];
         var allUids = [];
         for await (const message of sortedMessages) {
-            console.log(message);
             if(!allUids.includes(message.uid)) {
                 allUids.push(message.uid);
                 const docRef = await getDoc(doc(db, "users", message.uid));
@@ -45,11 +42,6 @@ class NewDoctorHome extends React.Component {
                 allChats.push(chat);
             }
         }
-
-        console.log("ALL CHATS");
-        console.log(allChats);
-
-        console.log(allChats.length);
         return allChats;
 };
 
@@ -71,21 +63,13 @@ class NewDoctorHome extends React.Component {
             sortedMessages = fetchedMessages.sort(
               (a, b) => a.createdAt - b.createdAt
             );
-
-            console.log("SORTED MESSAGES IN THE SNAPSHOT BLOCK");
-            console.log(sortedMessages);
         });
 
         var allChats = [];
 
         allChats = await this.hello(sortedMessages);
 
-        console.log("ALL CHATS OUTSIDE");
-        console.log(allChats);
-
         allChats.forEach((item) => {
-            console.log("ITEM");
-            console.log(item);
             this.setState({
                 chats: [...this.state.chats, item] 
             })

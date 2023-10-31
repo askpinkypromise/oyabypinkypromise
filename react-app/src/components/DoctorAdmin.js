@@ -28,7 +28,6 @@ const DoctorAdmin = () => {
 
 
     const buildChats = () => {
-        console.log("BUILD EFFECT");
         const q = query(
             collection(db, "messages"),
             orderBy("createdAt", "desc"),
@@ -47,14 +46,7 @@ const DoctorAdmin = () => {
         var allChats = [];
         var allUids = [];
 
-        console.log("ALL UIDS BEFORE");
-        console.log(allUids);
-
         allUids.splice(0,allUids.length);
-
-        console.log(allUids);
-        console.log("ALL UIDS AFTER");
-
 
         sortedMessages.forEach(async (message) => { 
             if(!allUids.includes(message.uid)) {
@@ -65,8 +57,6 @@ const DoctorAdmin = () => {
                     "name": docRef.data().displayName,
                     "text": message.text
                 }
-                console.log("CHAT");
-                allChats.concat(chat);
             }
         });
 
@@ -77,8 +67,6 @@ const DoctorAdmin = () => {
 
     useEffect(() => { 
         var allChats = buildChats();
-        console.log("all chats in the use effect");
-        console.log(allChats);
     }, []);
 
     // const handleClick = (e, uid) => {

@@ -8,15 +8,20 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
+import { useAuth } from "../AuthContext";
 // import { join } from "path";
 
 async function addMessage(text, name, avatar, uid, userId) {
+  console.log("ADD MESSAGE");
+  console.log(text);
+  console.log(uid);
   const messagesCollection = collection(db, "messages");
   try {
-    if(uid !== "kRwZoX1MdORDYjjj1Yxid5ZHBMX2") {
-      var to = "doctor"
-    } else if(uid == "hSJJ5oSAKNOYPSDeITLZT1rddVA2") {
+    if(uid === "hSJJ5oSAKNOYPSDeITLZT1rddVA2") {
+      console.log(userId);
       var to = userId;
+    } else {
+      var to = "doctor";
     }
     await addDoc(messagesCollection, {
       text: text,
@@ -32,12 +37,15 @@ async function addMessage(text, name, avatar, uid, userId) {
   }
 }
 
-const SendMessage = ({ scroll, userId }) => {
+const SendMessage = ({ scroll, userId, lastMessage }) => {
   const [message, setMessage] = useState("");
+  const user = useAuth();
+  console.log(lastMessage);
+
 
   const fetchData = async () => {
     try {
-      const apiUrl = `https://oya-chat-copilot-ca265bb90486.herokuapp.com/api/response?message=${message}`;
+      const apiUrl = `https://oya-chat-copilot-ca265bb90486.herokuapp.com/api/response?message=${lastMessage}`;
       const response = await fetch(apiUrl);
 
       if (response.ok) {
@@ -58,7 +66,9 @@ const SendMessage = ({ scroll, userId }) => {
     // Check if the user ID matches the specified ID
     // Make the API call
 
-    if(userId === "hSJJ5oSAKNOYPSDeITLZT1rddVA2") {
+    console.log(lastMessage);
+
+    if(user.uid === "hSJJ5oSAKNOYPSDeITLZT1rddVA2") {
       fetchData();
     }
 
@@ -67,22 +77,16 @@ const SendMessage = ({ scroll, userId }) => {
 
     const messagesCollectionRef = collection(db, "messages");
     const unsubscribe = onSnapshot(messagesCollectionRef, (querySnapshot) => {
-      // This callback will be called whenever there's a change in the "messages" collection
       querySnapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          // A new message was added
-          // fetchData(); // Call the fetch data function when a new message is added
+        if (change.type === "added") {  
         }
-        // You can also handle "modified" and "removed" changes if needed
       });
     });
 
-    // Remember to unsubscribe from the listener when your component unmounts
-    // This will prevent memory leaks
     return () => {
       unsubscribe();
     };
-  }, []); // Empty dependency array, runs once on component mount
+  }, []); 
 
   const sendMessage = async (event) => {
     const user = auth.currentUser;
@@ -96,7 +100,6 @@ const SendMessage = ({ scroll, userId }) => {
       await addMessage(message, displayName, "", auth.currentUser?.uid, userId);
     } catch (error) {
       console.error("Error adding message:", error);
-      // Handle the error here, such as displaying an error message to the user or taking appropriate action.
     }
   };
   return (
