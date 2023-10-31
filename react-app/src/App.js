@@ -16,6 +16,8 @@ import {
   Link,
 } from "react-router-dom";
 import DoctorAdmin from "./components/DoctorAdmin";
+import NewDoctorHome from "./components/NewDoctorHome";
+import DoctorChatBox from "./components/DoctorChatBox";
 
 function App() {
   // const [user] = useAuthState(auth);
@@ -38,6 +40,7 @@ function App() {
           <Route exact path="/chat" element={<ChatBox />}></Route>
           <Route exact path="/mediacontent" element={<MediaContent />}></Route>
           <Route exact path="/doctorAdmin" element={<DoctorHome />}></Route>
+          <Route exact path="/doctorChatBox" element={<DoctorChatBox />}></Route>
         </Routes>
       </Router>
     </div>

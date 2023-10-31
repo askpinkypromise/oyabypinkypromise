@@ -10,11 +10,13 @@ import {
 import { getDocs } from "firebase/firestore";
 // import { join } from "path";
 
-async function addMessage(text, name, avatar, uid) {
+async function addMessage(text, name, avatar, uid, userId) {
   const messagesCollection = collection(db, "messages");
   try {
     if(uid !== "kRwZoX1MdORDYjjj1Yxid5ZHBMX2") {
       var to = "doctor"
+    } else if(uid == "hSJJ5oSAKNOYPSDeITLZT1rddVA2") {
+      var to = userId;
     }
     await addDoc(messagesCollection, {
       text: text,
@@ -30,30 +32,35 @@ async function addMessage(text, name, avatar, uid) {
   }
 }
 
-const SendMessage = ({ scroll }) => {
+const SendMessage = ({ scroll, userId }) => {
   const [message, setMessage] = useState("");
+
+  const fetchData = async () => {
+    try {
+      const apiUrl = `https://oya-chat-copilot-ca265bb90486.herokuapp.com/api/response?message=${message}`;
+      const response = await fetch(apiUrl);
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessage(data["response"]); // Set the message from the API response
+        scroll.current.scrollIntoView({ behavior: "smooth" });
+      } else {
+        console.error("API Request Failed:", response.statusText);
+        // Handle the error as needed
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle Firestore or other errors here
+    }
+  };
 
   useEffect(() => {
     // Check if the user ID matches the specified ID
     // Make the API call
-    const fetchData = async () => {
-      try {
-        const apiUrl = `https://oya-chat-copilot-ca265bb90486.herokuapp.com/api/response?message=${message}`;
-        const response = await fetch(apiUrl);
 
-        if (response.ok) {
-          const data = await response.json();
-          setMessage(data["response"]); // Set the message from the API response
-          scroll.current.scrollIntoView({ behavior: "smooth" });
-        } else {
-          console.error("API Request Failed:", response.statusText);
-          // Handle the error as needed
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        // Handle Firestore or other errors here
-      }
-    };
+    if(userId === "hSJJ5oSAKNOYPSDeITLZT1rddVA2") {
+      fetchData();
+    }
 
     // Set up a listener for the "messages" collection
    // fetchData();
@@ -86,7 +93,7 @@ const SendMessage = ({ scroll }) => {
     }
     const { uid, displayName, photoURL } = auth.currentUser;
     try {
-      await addMessage(message, displayName, "", auth.currentUser?.uid);
+      await addMessage(message, displayName, "", auth.currentUser?.uid, userId);
     } catch (error) {
       console.error("Error adding message:", error);
       // Handle the error here, such as displaying an error message to the user or taking appropriate action.

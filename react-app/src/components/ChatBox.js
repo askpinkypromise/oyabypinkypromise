@@ -53,7 +53,7 @@ const ChatBox = () => {
       
       <div>
         <span ref={scroll}></span>
-      <SendMessage scroll={scroll} />
+      <SendMessage scroll={scroll} userId={user.uid}/>
       </div>
     </main>
   );

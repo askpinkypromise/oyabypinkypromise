@@ -16,24 +16,26 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import NavBar from "./NavBar";
+import { useAuth } from "../AuthContext";
 
 const DoctorChatBox = () => {
 
     const [messages, setMessages] = useState([]);
     const scroll = useRef();
     const location = useLocation();
+    const user = useAuth();
 
     useEffect(() => {
 
         const q = query(
             collection(db, "messages"),
-            orderBy("createdAt", "desc"),
-            limit(50)
-          );
+            orderBy("createdAt", "desc")
+        );
       
         const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
             const fetchedMessages = [];
             QuerySnapshot.forEach((doc) => {
+              console.log(doc.data());
               if(doc.data().uid === location.state.uid || (doc.data().uid === "hSJJ5oSAKNOYPSDeITLZT1rddVA2" && doc.data().to === location.state.uid)) {
                 fetchedMessages.push({ ...doc.data(), id: doc.id });
               }
@@ -44,7 +46,6 @@ const DoctorChatBox = () => {
             setMessages(sortedMessages);
           });
         return () => unsubscribe;
-
     }, []); 
 
     return (
@@ -59,7 +60,7 @@ const DoctorChatBox = () => {
         
         <div>
             <span ref={scroll}></span>
-        <SendMessage scroll={scroll}/>
+        <SendMessage scroll={scroll} userId={user.uid}/>
         </div>
         </main>
     );
